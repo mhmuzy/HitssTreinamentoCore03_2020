@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Projeto.Presentation.API.Models.Requests;
+using Projeto.Presentation.API.Models.Response;
+using Projeto.Presentation.API.Models.Responses;
 
 namespace Projeto.Presentation.API.Controllers
 {
@@ -12,9 +15,18 @@ namespace Projeto.Presentation.API.Controllers
     public class ProdutoController : ControllerBase
     {
         [HttpPost]
-        public IActionResult Post()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CadastroProdutoResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Post(CadastroProdutoRequests requests)
         {
-            return Ok();
+            var response = new CadastroProdutoResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Produto cadastrado com sucesso."
+            };
+
+            return Ok(response);
         }
 
         [HttpPut]

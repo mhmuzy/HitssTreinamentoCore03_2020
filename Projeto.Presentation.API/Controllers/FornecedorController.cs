@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Projeto.Presentation.API.Models.Requests;
+using Projeto.Presentation.API.Models.Response;
 
 namespace Projeto.Presentation.API.Controllers
 {
@@ -12,9 +14,18 @@ namespace Projeto.Presentation.API.Controllers
     public class FornecedorController : ControllerBase
     {
         [HttpPost]
-        public IActionResult Post()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CadastroFornecedorResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Post(CadastroFornecedorRequests requests)
         {
-            return Ok();    
+            var response = new CadastroFornecedorResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Fornecedor cadastrado com sucesso."
+            };
+
+            return Ok(response);    
         }
 
         [HttpPut]
