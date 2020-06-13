@@ -30,15 +30,34 @@ namespace Projeto.Presentation.API.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EdicaoProdutoResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Put(EdicaoProdutoRequest request)
         {
-            return Ok();
+            var response = new EdicaoProdutoResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Produto atualizado com sucesso."
+            };
+
+            return Ok(response);
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ExclusaoProdutoResponse))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Delete(int id)
         {
-            return Ok();
+            var response = new ExclusaoProdutoResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Produto excluido com sucesso."
+            };
+
+            return Ok(response);
         }
 
         [HttpGet]

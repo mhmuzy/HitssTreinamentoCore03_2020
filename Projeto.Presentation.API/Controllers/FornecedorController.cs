@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Projeto.Presentation.API.Models.Requests;
 using Projeto.Presentation.API.Models.Response;
+using Projeto.Presentation.API.Models.Responses;
 
 namespace Projeto.Presentation.API.Controllers
 {
@@ -29,15 +30,34 @@ namespace Projeto.Presentation.API.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EdicaoFornecedorResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Put(EdicaoFornecedorRequest request)
         {
-            return Ok();
+            var response = new EdicaoFornecedorResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Fornecedor atualizado com sucesso."
+            };
+
+            return Ok(response);
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ExclusaoFornecedorResponse))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Delete(int id)
         {
-            return Ok();
+            var response = new ExclusaoFornecedorResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Message = "Fornecedor excluído com sucesso."
+            };
+
+            return Ok(response);
         }
 
         [HttpGet]
