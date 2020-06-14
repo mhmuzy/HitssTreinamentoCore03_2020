@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Projeto.Presentation.API.Models.Requests;
 using Projeto.Presentation.API.Models.Response;
 using Projeto.Presentation.API.Models.Responses;
+using Projeto.Presentation.API.Repositories;
 
 namespace Projeto.Presentation.API.Controllers
 {
@@ -14,6 +15,9 @@ namespace Projeto.Presentation.API.Controllers
     [ApiController]
     public class ProdutoController : ControllerBase
     {
+        //atributo
+        private readonly ProdutoRepository produtoRepository;
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CadastroProdutoResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

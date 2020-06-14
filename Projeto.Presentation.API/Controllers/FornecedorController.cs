@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Projeto.Presentation.API.Models.Requests;
 using Projeto.Presentation.API.Models.Response;
 using Projeto.Presentation.API.Models.Responses;
+using Projeto.Presentation.API.Repositories;
 
 namespace Projeto.Presentation.API.Controllers
 {
@@ -14,16 +15,35 @@ namespace Projeto.Presentation.API.Controllers
     [ApiController]
     public class FornecedorController : ControllerBase
     {
+        //atributo
+        private readonly FornecedorRepository fornecedorRepository;
+
+        //construtor para injeção de dependência
+        public FornecedorController(FornecedorRepository fornecedorRepository)
+        {
+            this.fornecedorRepository = fornecedorRepository;
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CadastroFornecedorResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Post(CadastroFornecedorRequests requests)
         {
+            var entity = new FornecedorEntity
+            { 
+                IdFornecedor = new Random().Next(999, 999999),
+                Nome =  requests.Nome,
+                Cnpj = requests.Cnpj
+            };
+
+            fornecedorRepository.Add(entity);
+
             var response = new CadastroFornecedorResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
-                Message = "Fornecedor cadastrado com sucesso."
+                Message = "Fornecedor cadastrado com sucesso.",
+                Data = entity
             };
 
             return Ok(response);    
@@ -36,10 +56,20 @@ namespace Projeto.Presentation.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Put(EdicaoFornecedorRequest request)
         {
+            var entity = fornecedorRepository.GetById(request.IdFornecedor);
+
+            //verificando se o fornecedor não foi encontrado
+            if (entity == null)
+                return UnprocessableEntity();
+
+            entity.Nome = request.Nome;
+            entity.Cnpj = request.Cnpj;
+
             var response = new EdicaoFornecedorResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
-                Message = "Fornecedor atualizado com sucesso."
+                Message = "Fornecedor atualizado com sucesso.",
+                Data = entity
             };
 
             return Ok(response);
@@ -51,25 +81,50 @@ namespace Projeto.Presentation.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Delete(int id)
         {
+            var entity = fornecedorRepository.GetById(id);
+
+            //verificando se o fornecedor não foi encontrado
+            if (entity == null)
+                return UnprocessableEntity();
+
+            fornecedorRepository.Remove(entity);
+
             var response = new ExclusaoFornecedorResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
-                Message = "Fornecedor excluído com sucesso."
+                Message = "Fornecedor excluído com sucesso.",
+                Data = entity
             };
 
             return Ok(response);
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaFornecedorResponse))]
         public IActionResult GetAtt()
         {
-            return Ok();
+            var response = new ConsultaFornecedorResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Data = fornecedorRepository.GetAll()    
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaFornecedorResponse))]
         public IActionResult GetById(int id)
         {
-            return Ok();
+            var response = new ConsultaFornecedorResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Data = new List<FornecedorEntity>()
+            };
+
+            response.Data.Add(fornecedorRepository.GetById(id));
+
+            return Ok(response);
         }
     }
 }

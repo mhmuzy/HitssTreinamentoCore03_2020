@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Projeto.Presentation.API.Repositories;
 
 namespace Projeto.Presentation.API
 {
@@ -47,6 +48,13 @@ namespace Projeto.Presentation.API
                         }
                     });
             });
+
+            #endregion
+
+            #region Injeção de Dependência
+
+            services.AddSingleton<FornecedorRepository>();
+            services.AddSingleton<ProdutoRepository>();
 
             #endregion
         }
