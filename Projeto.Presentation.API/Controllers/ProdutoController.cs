@@ -18,16 +18,33 @@ namespace Projeto.Presentation.API.Controllers
         //atributo
         private readonly ProdutoRepository produtoRepository;
 
+        //construtor para injeção de dependência
+        public ProdutoController(ProdutoRepository produtoRepository)
+        {
+            this.produtoRepository = produtoRepository;
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CadastroProdutoResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Post(CadastroProdutoRequests requests)
         {
+            var entity = new ProdutoEntity
+            { 
+                IdProduto = new Random().Next(999, 999999),
+                Nome = requests.Nome,
+                Preco = requests.Preco,
+                Quantidade = requests.Quantidade
+            };
+
+            produtoRepository.Add(entity);
+
             var response = new CadastroProdutoResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
-                Message = "Produto cadastrado com sucesso."
+                Message = "Produto cadastrado com sucesso.",
+                Data = entity
             };
 
             return Ok(response);
@@ -40,6 +57,15 @@ namespace Projeto.Presentation.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Put(EdicaoProdutoRequest request)
         {
+            var entity = produtoRepository.GetById(request.IdProduto);
+
+            //verificando se o produto não foi encontrado
+            if (entity == null)
+                return UnprocessableEntity();
+
+            entity.Nome = request.Nome;
+            entity.Preco = request.Preco;
+
             var response = new EdicaoProdutoResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
@@ -65,15 +91,31 @@ namespace Projeto.Presentation.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaProdutoResponse))]
         public IActionResult GetAll()
         {
-            return Ok();
+            var response = new ConsultaProdutoResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Data = produtoRepository.GetAll()
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaProdutoResponse))]
         public IActionResult GetById(int id)
         {
-            return Ok();
+            var response = new ConsultaProdutoResponse
+            { 
+                StatusCode = StatusCodes.Status200OK,
+                Data = new List<ProdutoEntity>()
+            };
+
+            response.Data.Add(produtoRepository.GetById(id));
+
+            return Ok(response);
         }
     }
 }
