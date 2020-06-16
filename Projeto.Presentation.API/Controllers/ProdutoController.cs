@@ -65,11 +65,13 @@ namespace Projeto.Presentation.API.Controllers
 
             entity.Nome = request.Nome;
             entity.Preco = request.Preco;
+            entity.Quantidade = request.Quantidade;
 
             var response = new EdicaoProdutoResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
-                Message = "Produto atualizado com sucesso."
+                Message = "Produto atualizado com sucesso.",
+                Data = entity
             };
 
             return Ok(response);
@@ -81,10 +83,19 @@ namespace Projeto.Presentation.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Delete(int id)
         {
+            var entity = produtoRepository.GetById(id);
+
+            //verificando se o produto não foi encontrado.
+            if (entity == null)
+                return UnprocessableEntity();
+
+            produtoRepository.Remove(entity);
+
             var response = new ExclusaoProdutoResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
-                Message = "Produto excluido com sucesso."
+                Message = "Produto excluido com sucesso.",
+                Data = entity
             };
 
             return Ok(response);
