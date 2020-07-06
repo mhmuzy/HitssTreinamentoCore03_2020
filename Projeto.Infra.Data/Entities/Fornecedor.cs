@@ -12,12 +12,12 @@ namespace Projeto.Infra.Data.Entities
         public string Cnpj { get; set; }
 
         //Associação com a Tabela Produtos 1 - N
-        #region Produtos 
+        //#region Produtos 
 
-        public int IdProduto { get; set; }
+        //public int IdProduto { get; set; }
 
-        public List<Produto> Produtos { get; set; }
+        //public List<Produto> Produtos { get; set; }
 
-        #endregion
+        //#endregion
     }
 }

@@ -12,6 +12,23 @@ namespace Projeto.Infra.Data.Mappings
         public void Configure(EntityTypeBuilder<Produto> builder)
         {
             builder.ToTable("Produto");
+
+            builder.HasKey(p => p.IdProduto);
+
+            builder.Property(p => p.IdProduto)
+                .HasColumnName("IdProduto");
+
+            builder.Property(p => p.Nome)
+                .HasColumnName("Nome")
+                .HasMaxLength(150);
+
+            builder.Property(p => p.Preco)
+                .HasColumnName("Preco")
+                .HasColumnType("decimal(18, 2)");
+
+            builder.Property(p => p.Quantidade)
+                .HasColumnName("Quantidade");
+
         }
     }
 }
