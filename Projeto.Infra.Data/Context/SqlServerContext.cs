@@ -22,6 +22,19 @@ namespace Projeto.Infra.Data.Context
         public DbSet<Fornecedor> Fornecedores { get; set; } //CRUD..
         public DbSet<Produto> Produtos { get; set; } //CRUD..
 
-        //REGRA 4)
+        //REGRA 4) Sobrescrita (OVERRIDE) do método OnModelCreating
+        //Utilizado para registrar todos os mapeamentos do projeto..
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //registrar cada classe de mapeamento do projeto..
+            modelBuilder.ApplyConfiguration(new FornecedorMap());
+            modelBuilder.ApplyConfiguration(new ProdutoMap());
+
+            //mapeamento de índices (UNIQUE)
+            modelBuilder.Entity<Fornecedor>(entity =>
+                {
+                    entity.HasIndex(f => f.Cnpj).IsUnique();
+                });
+        }
     }
 }
