@@ -19,5 +19,7 @@ namespace Projeto.Presentation.API.Models.Requests
         [Required(ErrorMessage = "Por favor, informe a quantidade do produto.")]
         public int Quantidade { get; set; }
 
+        public int IdFornecedor { get; set; }
+
     }
 }

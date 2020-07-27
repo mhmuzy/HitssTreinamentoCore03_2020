@@ -11,6 +11,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Projeto.Presentation.API.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Projeto.Infra.Data.Context;
+using Projeto.Infra.Data.Contracts;
+using Projeto.Infra.Data.Repositories;
 
 namespace Projeto.Presentation.API
 {
@@ -53,8 +57,12 @@ namespace Projeto.Presentation.API
 
             #region Injeção de Dependência
 
-            services.AddSingleton<FornecedorRepository>();
-            services.AddSingleton<ProdutoRepository>();
+            services.AddDbContext<SqlServerContext>
+                (options => options.UseSqlServer
+                (Configuration.GetConnectionString("HitssTreinamento")));
+
+            services.AddTransient<IFornecedorRepository, Projeto.Infra.Data.Repositories.FornecedorRepository>();
+            services.AddTransient<IProdutoRepository, Projeto.Infra.Data.Repositories.ProdutoRepository>();
 
             #endregion
         }

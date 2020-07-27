@@ -8,6 +8,8 @@ using Projeto.Presentation.API.Models.Requests;
 using Projeto.Presentation.API.Models.Response;
 using Projeto.Presentation.API.Models.Responses;
 using Projeto.Presentation.API.Repositories;
+using Projeto.Infra.Data.Contracts;
+using Projeto.Infra.Data.Entities;
 
 namespace Projeto.Presentation.API.Controllers
 {
@@ -16,10 +18,10 @@ namespace Projeto.Presentation.API.Controllers
     public class ProdutoController : ControllerBase
     {
         //atributo
-        private readonly ProdutoRepository produtoRepository;
+        private readonly IProdutoRepository produtoRepository;
 
         //construtor para injeção de dependência
-        public ProdutoController(ProdutoRepository produtoRepository)
+        public ProdutoController(IProdutoRepository produtoRepository)
         {
             this.produtoRepository = produtoRepository;
         }
@@ -30,15 +32,16 @@ namespace Projeto.Presentation.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Post(CadastroProdutoRequests requests)
         {
-            var entity = new ProdutoEntity
+            var entity = new Produto
             { 
                 IdProduto = new Random().Next(999, 999999),
                 Nome = requests.Nome,
                 Preco = requests.Preco,
-                Quantidade = requests.Quantidade
+                Quantidade = requests.Quantidade,
+                IdFornecedor = requests.IdFornecedor
             };
 
-            produtoRepository.Add(entity);
+            produtoRepository.Create(entity);
 
             var response = new CadastroProdutoResponse
             { 
@@ -66,6 +69,9 @@ namespace Projeto.Presentation.API.Controllers
             entity.Nome = request.Nome;
             entity.Preco = request.Preco;
             entity.Quantidade = request.Quantidade;
+            entity.IdFornecedor = request.IdFornecedor;
+
+            produtoRepository.Update(entity);
 
             var response = new EdicaoProdutoResponse
             { 
@@ -89,7 +95,7 @@ namespace Projeto.Presentation.API.Controllers
             if (entity == null)
                 return UnprocessableEntity();
 
-            produtoRepository.Remove(entity);
+            produtoRepository.Delete(entity);
 
             var response = new ExclusaoProdutoResponse
             { 
@@ -121,7 +127,7 @@ namespace Projeto.Presentation.API.Controllers
             var response = new ConsultaProdutoResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
-                Data = new List<ProdutoEntity>()
+                Data = new List<Produto>()
             };
 
             response.Data.Add(produtoRepository.GetById(id));

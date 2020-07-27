@@ -10,5 +10,7 @@ namespace Projeto.Infra.Data.Entities
         public string Nome { get; set; }
         public double Preco { get; set; }
         public int Quantidade { get; set; }
+
+        public int IdFornecedor { get; set; }
     }
 }

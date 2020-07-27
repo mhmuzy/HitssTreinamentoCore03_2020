@@ -8,6 +8,8 @@ using Projeto.Presentation.API.Models.Requests;
 using Projeto.Presentation.API.Models.Response;
 using Projeto.Presentation.API.Models.Responses;
 using Projeto.Presentation.API.Repositories;
+using Projeto.Infra.Data.Contracts;
+using Projeto.Infra.Data.Entities;
 
 namespace Projeto.Presentation.API.Controllers
 {
@@ -16,10 +18,9 @@ namespace Projeto.Presentation.API.Controllers
     public class FornecedorController : ControllerBase
     {
         //atributo
-        private readonly FornecedorRepository fornecedorRepository;
-
+        private readonly IFornecedorRepository fornecedorRepository;
         //construtor para injeção de dependência
-        public FornecedorController(FornecedorRepository fornecedorRepository)
+        public FornecedorController(IFornecedorRepository fornecedorRepository)
         {
             this.fornecedorRepository = fornecedorRepository;
         }
@@ -30,14 +31,14 @@ namespace Projeto.Presentation.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Post(CadastroFornecedorRequests requests)
         {
-            var entity = new FornecedorEntity
+            var entity = new Fornecedor
             { 
                 IdFornecedor = new Random().Next(999, 999999),
                 Nome =  requests.Nome,
                 Cnpj = requests.Cnpj
             };
 
-            fornecedorRepository.Add(entity);
+            fornecedorRepository.Create(entity);
 
             var response = new CadastroFornecedorResponse
             { 
@@ -65,6 +66,8 @@ namespace Projeto.Presentation.API.Controllers
             entity.Nome = request.Nome;
             entity.Cnpj = request.Cnpj;
 
+            fornecedorRepository.Update(entity);
+
             var response = new EdicaoFornecedorResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
@@ -87,7 +90,7 @@ namespace Projeto.Presentation.API.Controllers
             if (entity == null)
                 return UnprocessableEntity();
 
-            fornecedorRepository.Remove(entity);
+            fornecedorRepository.Delete(entity);
 
             var response = new ExclusaoFornecedorResponse
             { 
@@ -106,25 +109,40 @@ namespace Projeto.Presentation.API.Controllers
             var response = new ConsultaFornecedorResponse
             { 
                 StatusCode = StatusCodes.Status200OK,
-                Data = fornecedorRepository.GetAll()    
+                Data = fornecedorRepository.GetAll()
             };
 
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaFornecedorResponse))]
-        public IActionResult GetById(int id)
-        {
-            var response = new ConsultaFornecedorResponse
-            { 
-                StatusCode = StatusCodes.Status200OK,
-                Data = new List<FornecedorEntity>()
-            };
+        //[HttpGet("{id}")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaFornecedorResponse))]
+        //public IActionResult GetById(int id)
+        //{
+        //    var response = new ConsultaFornecedorResponse
+        //    { 
+        //        StatusCode = StatusCodes.Status200OK,
+        //        Data = new List<Fornecedor>()
+        //    };
 
-            response.Data.Add(fornecedorRepository.GetById(id));
+        //    response.Data.Add(fornecedorRepository.GetById(id));
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
+
+        //[HttpGet("{cnpj}")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConsultaFornecedorResponse))]
+        //public IActionResult GetByCnpj(string cnpj)
+        //{
+        //    var response = new ConsultaFornecedorResponse
+        //    { 
+        //        StatusCode = StatusCodes.Status200OK,
+        //        Data = new List<Fornecedor>()
+        //    };
+
+        //    response.Data.Add(fornecedorRepository.GetByCnpj(cnpj));
+
+        //    return Ok(response);
+        //}
     }
 }
