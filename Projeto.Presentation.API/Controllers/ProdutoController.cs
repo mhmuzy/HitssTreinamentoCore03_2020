@@ -10,9 +10,11 @@ using Projeto.Presentation.API.Models.Responses;
 using Projeto.Presentation.API.Repositories;
 using Projeto.Infra.Data.Contracts;
 using Projeto.Infra.Data.Entities;
+using Microsoft.AspNetCore.Cors;
 
 namespace Projeto.Presentation.API.Controllers
 {
+    [EnableCors("DefaultPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProdutoController : ControllerBase

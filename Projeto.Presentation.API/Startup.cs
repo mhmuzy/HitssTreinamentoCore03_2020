@@ -65,6 +65,24 @@ namespace Projeto.Presentation.API
             services.AddTransient<IProdutoRepository, Projeto.Infra.Data.Repositories.ProdutoRepository>();
 
             #endregion
+
+            #region CORS
+
+            services.AddCors(s => s.AddPolicy("DefaultPolicy",
+                builder => {
+
+                    builder.AllowAnyOrigin()
+
+                    //qualquer cliente pode acessar a API
+
+                    .AllowAnyMethod()   //qualquer método POST, PUT, DELETE, GET
+
+                    .AllowAnyHeader();  //qualquer cabeçalho <HEAD>
+
+
+                }));
+
+            #endregion
         }
 
         // This method gets called by the runtime. 
@@ -77,6 +95,12 @@ namespace Projeto.Presentation.API
             }
 
             app.UseRouting();
+
+            #region CORS
+
+            app.UseCors("DefaultPolicy");
+
+            #endregion
 
             app.UseAuthorization();
 
