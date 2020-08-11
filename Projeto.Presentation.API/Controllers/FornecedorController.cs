@@ -86,6 +86,10 @@ namespace Projeto.Presentation.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Delete(int id)
         {
+            try
+            {
+
+            
             var entity = fornecedorRepository.GetById(id);
 
             //verificando se o fornecedor não foi encontrado
@@ -102,6 +106,12 @@ namespace Projeto.Presentation.API.Controllers
             };
 
             return Ok(response);
+            }
+            catch (Exception)
+            {
+
+                return Ok("Fornecedor tem um ou mais produtos cadstrados.");
+            }
         }
 
         [HttpGet]
