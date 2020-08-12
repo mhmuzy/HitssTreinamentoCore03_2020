@@ -21,6 +21,9 @@ namespace Projeto.Infra.Data.Context
         //REGRA 3) Declarar uma propriedade DbSet para cada entidade do projeto
         public DbSet<Fornecedor> Fornecedores { get; set; } //CRUD..
         public DbSet<Produto> Produtos { get; set; } //CRUD..
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Funcionario> Funcionarios { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
 
         //REGRA 4) Sobrescrita (OVERRIDE) do método OnModelCreating
         //Utilizado para registrar todos os mapeamentos do projeto..
@@ -29,11 +32,31 @@ namespace Projeto.Infra.Data.Context
             //registrar cada classe de mapeamento do projeto..
             modelBuilder.ApplyConfiguration(new FornecedorMap());
             modelBuilder.ApplyConfiguration(new ProdutoMap());
+            modelBuilder.ApplyConfiguration(new UsuarioMap());
+            modelBuilder.ApplyConfiguration(new FuncionarioMap());
+            modelBuilder.ApplyConfiguration(new ClienteMap());
 
             //mapeamento de índices (UNIQUE)
             modelBuilder.Entity<Fornecedor>(entity =>
                 {
                     entity.HasIndex(f => f.Cnpj).IsUnique();
+                    entity.HasIndex(f => f.Nome).IsUnique();
+                });
+            modelBuilder.Entity<Usuario>(entity =>
+                {
+
+                    entity.HasIndex(u => u.Nome).IsUnique();
+                    entity.HasIndex(u => u.Email).IsUnique();
+                });
+            modelBuilder.Entity<Funcionario>(entity =>
+                {
+                    entity.HasIndex(fu => fu.Cpf).IsUnique();
+                    entity.HasIndex(fu => fu.Nome).IsUnique();
+                });
+            modelBuilder.Entity<Cliente>(entity => 
+                {
+                    entity.HasIndex(c => c.Cpf).IsUnique();
+                    entity.HasIndex(c => c.Nome).IsUnique();
                 });
         }
     }
