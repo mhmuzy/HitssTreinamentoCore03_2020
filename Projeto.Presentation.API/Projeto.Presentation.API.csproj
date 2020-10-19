@@ -15,5 +15,7 @@
     <ProjectReference Include="..\Projeto.Infra.Data\Projeto.Infra.Data.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://json.schemastore.org/sarif-2.1.0-rtm.3.json" /></VisualStudio></ProjectExtensions>
+
 
 </Project>
