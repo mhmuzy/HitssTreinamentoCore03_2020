@@ -11,9 +11,11 @@ using Projeto.Presentation.API.Repositories;
 using Projeto.Infra.Data.Contracts;
 using Projeto.Infra.Data.Entities;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Projeto.Presentation.API.Controllers
 {
+    [Authorize]
     [EnableCors("DefaultPolicy")]
     [Route("api/[controller]")]
     [ApiController]

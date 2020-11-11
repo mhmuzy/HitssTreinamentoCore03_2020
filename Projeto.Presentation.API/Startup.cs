@@ -15,6 +15,10 @@ using Microsoft.EntityFrameworkCore;
 using Projeto.Infra.Data.Context;
 using Projeto.Infra.Data.Contracts;
 using Projeto.Infra.Data.Repositories;
+using Projeto.Presentation.API.Configurations;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Projeto.Presentation.API
 {
@@ -63,6 +67,9 @@ namespace Projeto.Presentation.API
 
             services.AddTransient<IFornecedorRepository, Projeto.Infra.Data.Repositories.FornecedorRepository>();
             services.AddTransient<IProdutoRepository, Projeto.Infra.Data.Repositories.ProdutoRepository>();
+            services.AddTransient<IUsuarioRepository, Projeto.Infra.Data.Repositories.UsuarioRepository>();
+            services.AddTransient<IFuncionarioRepository, Projeto.Infra.Data.Repositories.FuncionarioRepository>();
+            services.AddTransient<IClienteRepository, Projeto.Infra.Data.Repositories.ClienteRepository>();
 
             #endregion
 
@@ -81,6 +88,38 @@ namespace Projeto.Presentation.API
 
 
                 }));
+
+            #endregion
+
+            #region JWT
+
+            var settingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(settingsSection);
+
+            var appSettings = settingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
+
+            services.AddAuthentication(auth =>
+            {
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults
+                                                        .AuthenticationScheme;
+                auth.DefaultChallengeScheme = JwtBearerDefaults
+                                                        .AuthenticationScheme;
+            })
+            .AddJwtBearer(bearer =>
+             {
+                 bearer.RequireHttpsMetadata = false;
+                 bearer.SaveToken = true;
+                 bearer.TokenValidationParameters = new TokenValidationParameters
+                 { 
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                 };
+             });
+
+            services.AddTransient(map => new TokenService(appSettings));
 
             #endregion
         }
@@ -102,6 +141,7 @@ namespace Projeto.Presentation.API
 
             #endregion
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -12,5 +12,7 @@ namespace Projeto.Infra.Data.Entities
 
         public string Cpf { get; set; }
         public DateTime DataNascimento { get; set; }
+
+        public int IdFuncionario { get; set; }
     }
 }
