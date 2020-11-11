@@ -40,7 +40,7 @@ namespace Projeto.Presentation.API
             {
                 s.SwaggerDoc("v1",
                     new OpenApiInfo
-                    { 
+                    {
                         Title = "Hitss Treinamento Core 03 - 2020",
                         Version = "v1",
                         Description = "Seja Bem Vindo a Área de Treinamento da Hitss",
@@ -114,7 +114,7 @@ namespace Projeto.Presentation.API
             app.UseSwagger();
 
             app.UseSwaggerUI(s =>
-                    { s.SwaggerEndpoint("/swagger/v1/swagger.json", "Aula"); });
+            { s.SwaggerEndpoint("/swagger/v1/swagger.json", "Aula"); });
 
             #endregion
         }

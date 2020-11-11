@@ -35,7 +35,7 @@ namespace Projeto.Presentation.API.Controllers
         public IActionResult Post(CadastroProdutoRequests requests)
         {
             var entity = new Produto
-            { 
+            {
                 IdProduto = new Random().Next(999, 999999),
                 Nome = requests.Nome,
                 Preco = requests.Preco,
@@ -46,7 +46,7 @@ namespace Projeto.Presentation.API.Controllers
             produtoRepository.Create(entity);
 
             var response = new CadastroProdutoResponse
-            { 
+            {
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Produto cadastrado com sucesso.",
                 Data = entity
@@ -76,7 +76,7 @@ namespace Projeto.Presentation.API.Controllers
             produtoRepository.Update(entity);
 
             var response = new EdicaoProdutoResponse
-            { 
+            {
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Produto atualizado com sucesso.",
                 Data = entity
@@ -100,7 +100,7 @@ namespace Projeto.Presentation.API.Controllers
             produtoRepository.Delete(entity);
 
             var response = new ExclusaoProdutoResponse
-            { 
+            {
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Produto excluido com sucesso.",
                 Data = entity
@@ -114,7 +114,7 @@ namespace Projeto.Presentation.API.Controllers
         public IActionResult GetAll()
         {
             var response = new ConsultaProdutoResponse
-            { 
+            {
                 StatusCode = StatusCodes.Status200OK,
                 Data = produtoRepository.GetAll()
             };
@@ -127,7 +127,7 @@ namespace Projeto.Presentation.API.Controllers
         public IActionResult GetById(int id)
         {
             var response = new ConsultaProdutoResponse
-            { 
+            {
                 StatusCode = StatusCodes.Status200OK,
                 Data = new List<Produto>()
             };

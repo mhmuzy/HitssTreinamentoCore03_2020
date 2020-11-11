@@ -34,22 +34,22 @@ namespace Projeto.Presentation.API.Controllers
         public IActionResult Post(CadastroFornecedorRequests requests)
         {
             var entity = new Fornecedor
-            { 
+            {
                 IdFornecedor = new Random().Next(999, 999999),
-                Nome =  requests.Nome,
+                Nome = requests.Nome,
                 Cnpj = requests.Cnpj
             };
 
             fornecedorRepository.Create(entity);
 
             var response = new CadastroFornecedorResponse
-            { 
+            {
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Fornecedor cadastrado com sucesso.",
                 Data = entity
             };
 
-            return Ok(response);    
+            return Ok(response);
         }
 
         [HttpPut]
@@ -71,7 +71,7 @@ namespace Projeto.Presentation.API.Controllers
             fornecedorRepository.Update(entity);
 
             var response = new EdicaoFornecedorResponse
-            { 
+            {
                 StatusCode = StatusCodes.Status200OK,
                 Message = "Fornecedor atualizado com sucesso.",
                 Data = entity
@@ -89,23 +89,23 @@ namespace Projeto.Presentation.API.Controllers
             try
             {
 
-            
-            var entity = fornecedorRepository.GetById(id);
 
-            //verificando se o fornecedor não foi encontrado
-            if (entity == null)
-                return UnprocessableEntity();
+                var entity = fornecedorRepository.GetById(id);
 
-            fornecedorRepository.Delete(entity);
+                //verificando se o fornecedor não foi encontrado
+                if (entity == null)
+                    return UnprocessableEntity();
 
-            var response = new ExclusaoFornecedorResponse
-            { 
-                StatusCode = StatusCodes.Status200OK,
-                Message = "Fornecedor excluído com sucesso.",
-                Data = entity
-            };
+                fornecedorRepository.Delete(entity);
 
-            return Ok(response);
+                var response = new ExclusaoFornecedorResponse
+                {
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = "Fornecedor excluído com sucesso.",
+                    Data = entity
+                };
+
+                return Ok(response);
             }
             catch (Exception)
             {
@@ -119,7 +119,7 @@ namespace Projeto.Presentation.API.Controllers
         public IActionResult GetAtt()
         {
             var response = new ConsultaFornecedorResponse
-            { 
+            {
                 StatusCode = StatusCodes.Status200OK,
                 Data = fornecedorRepository.GetAll()
             };
